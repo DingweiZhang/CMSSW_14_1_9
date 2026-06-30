@@ -1,9 +1,12 @@
-__init__.py
+# Python
+__pycache__/
 *.pyc
+*.pyo
 .*.swp
 .#*
 #*#
 *~
+*.py~
 *.pb
 
 # ignore partially applied patches and their backup
@@ -21,3 +24,18 @@ __init__.py
 
 #ignore mac specific file
 .DS_Store
+# ROOT outputs
+*.root
+# CRAB work area
+crab_projects/
+crab_projects_*/
+**/crab_projects/
+**/crab_projects_*/
+# local scratch
+**/test/temp/
+**/plugins/temp/
+# CRAB / helper logs
+crab.log
+**/crab.log
+resubmit_*.log
+kill_*.log
