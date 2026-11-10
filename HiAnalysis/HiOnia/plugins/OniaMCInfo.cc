@@ -81,7 +81,11 @@ void HiOniaAnalyzer::fillGenInfo() {
          ++it) {
       const reco::GenParticle* gen = &(*it);
 
-      if (abs(gen->pdgId()) == _oniaPDG && (gen->status() == 2 || (abs(gen->pdgId()) == 23 && gen->status() == 62)) &&
+      // status 2: decayed quarkonium. status 22: Pythia8 hard-process copy used by
+      // starlight coherent J/psi (HINPbPbSpring23MiniAOD), whose daughters are
+      // status-1 muons or status-23 copies of those muons.
+      if (abs(gen->pdgId()) == _oniaPDG &&
+          (gen->status() == 2 || gen->status() == 22 || (abs(gen->pdgId()) == 23 && gen->status() == 62)) &&
           gen->numberOfDaughters() >= 2) {
         reco::GenParticleRef genMuon1 = findDaughterRef(gen->daughterRef(0), gen->pdgId());
         reco::GenParticleRef genMuon2 = findDaughterRef(gen->daughterRef(1), gen->pdgId());

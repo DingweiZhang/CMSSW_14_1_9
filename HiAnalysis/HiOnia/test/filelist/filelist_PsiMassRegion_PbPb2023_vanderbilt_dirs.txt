@@ -1,0 +1,42 @@
+# directory prefixes, PbPb2023 Onia on Vanderbilt (main, then _failedLumi when present)
+# PD7 jobs 84,145,220,288,343,353,357,368,370,373 and PD23 jobs 251,292,313,314
+# have no output and are not covered by _failedLumi.
+# nrequests: 38
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime0/Onia_2023_RawPrime0
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime1/Onia_2023_RawPrime1
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime2/Onia_2023_RawPrime2
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime3/Onia_2023_RawPrime3
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime3/Onia_2023_RawPrime3_failedLumi
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime4/Onia_2023_RawPrime4
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime5/Onia_2023_RawPrime5
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime6/Onia_2023_RawPrime6
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime7/Onia_2023_RawPrime7
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime7/Onia_2023_RawPrime7_failedLumi
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime8/Onia_2023_RawPrime8
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime9/Onia_2023_RawPrime9
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime9/Onia_2023_RawPrime9_failedLumi
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime10/Onia_2023_RawPrime10
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime11/Onia_2023_RawPrime11
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime12/Onia_2023_RawPrime12
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime13/Onia_2023_RawPrime13
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime14/Onia_2023_RawPrime14
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime15/Onia_2023_RawPrime15
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime16/Onia_2023_RawPrime16
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime17/Onia_2023_RawPrime17
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime18/Onia_2023_RawPrime18
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime18/Onia_2023_RawPrime18_failedLumi
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime19/Onia_2023_RawPrime19
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime20/Onia_2023_RawPrime20
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime21/Onia_2023_RawPrime21
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime22/Onia_2023_RawPrime22
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime23/Onia_2023_RawPrime23
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime23/Onia_2023_RawPrime23_failedLumi
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime24/Onia_2023_RawPrime24
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime25/Onia_2023_RawPrime25
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime26/Onia_2023_RawPrime26
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime27/Onia_2023_RawPrime27
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime28/Onia_2023_RawPrime28
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime29/Onia_2023_RawPrime29
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime29/Onia_2023_RawPrime29_failedLumi
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime30/Onia_2023_RawPrime30
+root://xrootd-vanderbilt.sites.opensciencegrid.org//store/user/dizhang/PbPb2023_Oniatree/HIPhysicsRawPrime31/Onia_2023_RawPrime31
