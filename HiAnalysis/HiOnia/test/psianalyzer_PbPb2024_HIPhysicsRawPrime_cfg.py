@@ -66,7 +66,7 @@ options.inputFiles = [
 options.outputFile = 'Oniatree_PsiMassRegion_PbPb2024_HIPhysicsRawPrime.root'
 options.secondaryOutputFile = "Jpsi_Dataset.root"
 
-options.maxEvents = 10000 # -1 means all events
+options.maxEvents = -1 # -1 means all events
 
 # Get and parse the command line arguments
 options.parseArguments()

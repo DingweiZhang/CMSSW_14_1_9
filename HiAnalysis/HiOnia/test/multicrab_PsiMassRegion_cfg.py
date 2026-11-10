@@ -58,6 +58,27 @@ def parse_args():
         default=None,
         help="For era B only: submit a single PromptReco version (default: both v1 and v2).",
     )
+    parser.add_argument(
+        "--units-per-job",
+        type=int,
+        default=None,
+        metavar="N",
+        help="EventAwareLumiBased unitsPerJob (default: 4000000).",
+    )
+    parser.add_argument(
+        "--max-job-runtime-min",
+        type=int,
+        default=None,
+        metavar="MIN",
+        help="Job wall time in minutes (default: 2500, CRAB max 2750).",
+    )
+    parser.add_argument(
+        "--max-memory-mb",
+        type=int,
+        default=None,
+        metavar="MB",
+        help="Job memory in MB (default: 2400).",
+    )
     return parser.parse_args()
 
 
@@ -86,15 +107,23 @@ def make_base_config():
         "https://cms-service-dqmdc.web.cern.ch/CAF/certification/Collisions24HI/"
         "Cert_Collisions2024_HI_387853_388784_Golden.json"
     )
-    cfg.Data.outLFNDirBase = (
-        "/store/group/phys_heavyions/dizhang/"
-        "run3_2024_PbPb5p36TeV_cohJpsi/data_tree/onia_tree/"
-    )
+    # Stage-out to Vanderbilt; EraA/B paths set in main() per request.
+    #   EraA: /store/user/dizhang/PbPb2024_EraA/<PD>/<requestName>/...
+    #   EraB: /store/user/dizhang/<PD>/<requestName>/...  (existing layout)
+    cfg.Data.outLFNDirBase = "/store/user/dizhang/"
 
     cfg.section_("Site")
-    cfg.Site.storageSite = "T2_CH_CERN"
-    cfg.Site.whitelist = ["T2_US_*", "T2_CH_CERN", "T1_US_*"]
+    cfg.Site.storageSite = "T2_US_Vanderbilt"
+    # ignoreLocality not set; whitelist where jobs may run. Output site is storageSite.
+    cfg.Site.whitelist = ["T2_CH_CERN", "T2_US_*", "T1_US_*"]
     return cfg
+
+
+def out_lfn_dir_base(request_name):
+    """LFN base on Vanderbilt for this CRAB request."""
+    if "EraA" in request_name:
+        return "/store/user/dizhang/PbPb2024_EraA/"
+    return "/store/user/dizhang/"
 
 
 def submit(cfg, dryrun):
@@ -156,6 +185,13 @@ def main():
     args = parse_args()
     cfg = make_base_config()
 
+    if args.units_per_job is not None:
+        cfg.Data.unitsPerJob = args.units_per_job
+    if args.max_job_runtime_min is not None:
+        cfg.JobType.maxJobRuntimeMin = args.max_job_runtime_min
+    if args.max_memory_mb is not None:
+        cfg.JobType.maxMemoryMB = args.max_memory_mb
+
     jobs = []
     if args.era in ("A", "all"):
         jobs.extend(era_a_jobs(args.pd))
@@ -165,16 +201,35 @@ def main():
     if not jobs:
         raise SystemExit("No jobs selected.")
 
+    if args.era == "A":
+        cfg.General.workArea = "crab_projects_PsiMassRegion_EraA"
+
     print(
         f"Prepared {len(jobs)} CRAB job(s)"
         + (" [DRY-RUN]" if args.dryrun else "")
+        + f" | unitsPerJob={cfg.Data.unitsPerJob}"
+        + f" maxJobRuntimeMin={cfg.JobType.maxJobRuntimeMin}"
+        + f" maxMemoryMB={cfg.JobType.maxMemoryMB}"
     )
+    print(f"  storageSite   = {cfg.Site.storageSite}")
+    print(f"  workArea      = {cfg.General.workArea}")
+    for i, (request_name, input_dataset) in enumerate(jobs[:3]):
+        print(
+            f"  example[{i}]: {request_name} <- {input_dataset}"
+            f"  out={out_lfn_dir_base(request_name)}"
+        )
+    if len(jobs) > 3:
+        print(f"  ... and {len(jobs) - 3} more")
 
     for request_name, input_dataset in jobs:
         cfg.General.requestName = request_name
         cfg.Data.inputDataset = input_dataset
         cfg.Data.outputDatasetTag = request_name
-        print(f"{'Dry-running' if args.dryrun else 'Submitting'} CRAB job for: {input_dataset}")
+        cfg.Data.outLFNDirBase = out_lfn_dir_base(request_name)
+        print(
+            f"{'Dry-running' if args.dryrun else 'Submitting'} CRAB job for: {input_dataset}"
+            f" -> {cfg.Data.outLFNDirBase}"
+        )
         submit(cfg, args.dryrun)
 
 

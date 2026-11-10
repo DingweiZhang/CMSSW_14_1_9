@@ -68,6 +68,19 @@ namespace {
       }
     }
   }
+// ROOT 6.30.09 segfaults in TStreamerInfo::ForceWriteInfo when a TClonesArray
+// branch is created on a TFileService-backed tree. Book it detached, then
+// put the tree back in the file. The on-disk branch type is unchanged.
+void bookClonesArray(TTree* tree, const char* name, TClonesArray*& arr) {
+  if (tree == nullptr || arr == nullptr) {
+    return;
+  }
+  TDirectory* dir = tree->GetDirectory();
+  tree->SetDirectory(nullptr);
+  tree->Branch(name, "TClonesArray", &arr, 32000, 0);
+  tree->SetDirectory(dir);
+}
+
 }  // namespace
 
 HiOniaAnalyzer::HiOniaAnalyzer(const edm::ParameterSet& iConfig)
@@ -1470,9 +1483,9 @@ void HiOniaAnalyzer::InitTree() {
     myTree->Branch("SumET_EB", &SumET_EB, "SumET_EB/F");
     //myTree->Branch("SumET_EEplus", &SumET_EEplus, "SumET_EEplus/F");
     //myTree->Branch("SumET_EEminus", &SumET_EEminus, "SumET_EEminus/F");
-    //myTree->Branch("SumET_ZDC", &SumET_ZDC, "SumET_ZDC/F");
-    //myTree->Branch("SumET_ZDCplus", &SumET_ZDCplus, "SumET_ZDCplus/F");
-    //myTree->Branch("SumET_ZDCminus", &SumET_ZDCminus, "SumET_ZDCminus/F");
+    myTree->Branch("SumET_ZDC", &SumET_ZDC, "SumET_ZDC/F");
+    myTree->Branch("SumET_ZDCplus", &SumET_ZDCplus, "SumET_ZDCplus/F");
+    myTree->Branch("SumET_ZDCminus", &SumET_ZDCminus, "SumET_ZDCminus/F");
   }
 
   if ((_isHI || _isPA) && _useEvtPlane) {
@@ -1490,7 +1503,7 @@ void HiOniaAnalyzer::InitTree() {
       myTree->Branch("Reco_3mu_size", &Reco_3mu_size, "Reco_3mu_size/S");
       myTree->Branch("Reco_3mu_charge", Reco_3mu_charge, "Reco_3mu_charge[Reco_3mu_size]/S");
       if (std::strcmp("array", _mom4format.c_str()) == 0)
-        myTree->Branch("Reco_3mu_4mom", "TClonesArray", &Reco_3mu_4mom, 32000, 0);
+        bookClonesArray(myTree, "Reco_3mu_4mom", Reco_3mu_4mom);
       if (std::strcmp("vector", _mom4format.c_str()) == 0){
         myTree->Branch("Reco_3mu_4mom_pt", &Reco_3mu_4mom_pt, 32000, 0);
         myTree->Branch("Reco_3mu_4mom_eta", &Reco_3mu_4mom_eta, 32000, 0);
@@ -1555,14 +1568,14 @@ void HiOniaAnalyzer::InitTree() {
       if (_useSVfinder && SVs.isValid() && !SVs->empty()) {
         myTree->Branch("Reco_3mu_NbMuInSameSV", Reco_3mu_NbMuInSameSV, "Reco_3mu_NbMuInSameSV[Reco_3mu_size]/S");
       }
-      myTree->Branch("Reco_3mu_vtx", "TClonesArray", &Reco_3mu_vtx, 32000, 0);
+      bookClonesArray(myTree, "Reco_3mu_vtx", Reco_3mu_vtx);
     }
 
     myTree->Branch("Reco_QQ_size", &Reco_QQ_size, "Reco_QQ_size/S");
     myTree->Branch("Reco_QQ_type", Reco_QQ_type, "Reco_QQ_type[Reco_QQ_size]/S");
     myTree->Branch("Reco_QQ_sign", Reco_QQ_sign, "Reco_QQ_sign[Reco_QQ_size]/S");
     if (std::strcmp("array", _mom4format.c_str()) == 0)
-      myTree->Branch("Reco_QQ_4mom", "TClonesArray", &Reco_QQ_4mom, 32000, 0);
+      bookClonesArray(myTree, "Reco_QQ_4mom", Reco_QQ_4mom);
     if (std::strcmp("vector", _mom4format.c_str()) == 0) {
       myTree->Branch("Reco_QQ_4mom_pt", &Reco_QQ_4mom_pt, 32000, 0);
       myTree->Branch("Reco_QQ_4mom_eta", &Reco_QQ_4mom_eta, 32000, 0);
@@ -1587,7 +1600,7 @@ void HiOniaAnalyzer::InitTree() {
     myTree->Branch("Reco_QQ_VtxProb", Reco_QQ_VtxProb, "Reco_QQ_VtxProb[Reco_QQ_size]/F");
     myTree->Branch("Reco_QQ_dca", Reco_QQ_dca, "Reco_QQ_dca[Reco_QQ_size]/F");
     //myTree->Branch("Reco_QQ_MassErr", Reco_QQ_MassErr, "Reco_QQ_MassErr[Reco_QQ_size]/F");
-    myTree->Branch("Reco_QQ_vtx", "TClonesArray", &Reco_QQ_vtx, 32000, 0);
+    bookClonesArray(myTree, "Reco_QQ_vtx", Reco_QQ_vtx);
 
     if ((!_theMinimumFlag && _muonLessPrimaryVertex) || (_flipJpsiDirection > 0)) {
       myTree->Branch("Reco_QQ_mupl_dxy_muonlessVtx", Reco_QQ_mupl_dxy, "Reco_QQ_mupl_dxy_muonlessVtx[Reco_QQ_size]/F");
@@ -1598,7 +1611,7 @@ void HiOniaAnalyzer::InitTree() {
     if (_flipJpsiDirection > 0) {
       myTree->Branch("Reco_QQ_flipJpsi", Reco_QQ_flipJpsi, "Reco_QQ_flipJpsi[Reco_QQ_size]/S");
       if (std::strcmp("array", _mom4format.c_str()) == 0)
-        myTree->Branch("Reco_QQ_mumi_4mom", "TClonesArray", &Reco_QQ_mumi_4mom, 32000, 0);
+        bookClonesArray(myTree, "Reco_QQ_mumi_4mom", Reco_QQ_mumi_4mom);
       if (std::strcmp("vector", _mom4format.c_str()) == 0) {
         myTree->Branch("Reco_QQ_mumi_4mom_pt", &Reco_QQ_mumi_4mom_pt, 32000, 0);
         myTree->Branch("Reco_QQ_mumi_4mom_eta", &Reco_QQ_mumi_4mom_eta, 32000, 0);
@@ -1606,7 +1619,7 @@ void HiOniaAnalyzer::InitTree() {
         myTree->Branch("Reco_QQ_mumi_4mom_m", &Reco_QQ_mumi_4mom_m, 32000, 0);
       }
       if (std::strcmp("array", _mom4format.c_str()) == 0)
-        myTree->Branch("Reco_QQ_mupl_4mom", "TClonesArray", &Reco_QQ_mupl_4mom, 32000, 0);
+        bookClonesArray(myTree, "Reco_QQ_mupl_4mom", Reco_QQ_mupl_4mom);
       if (std::strcmp("vector", _mom4format.c_str()) == 0) {
         myTree->Branch("Reco_QQ_mupl_4mom_pt", &Reco_QQ_mupl_4mom_pt, 32000, 0);
         myTree->Branch("Reco_QQ_mupl_4mom_eta", &Reco_QQ_mupl_4mom_eta, 32000, 0);
@@ -1624,8 +1637,8 @@ void HiOniaAnalyzer::InitTree() {
   //myTree->Branch("Reco_mu_SelectionType", Reco_mu_SelectionType, "Reco_mu_SelectionType[Reco_mu_size]/I");
   myTree->Branch("Reco_mu_charge", Reco_mu_charge, "Reco_mu_charge[Reco_mu_size]/S");
   if (std::strcmp("array", _mom4format.c_str()) == 0) {
-    myTree->Branch("Reco_mu_4mom", "TClonesArray", &Reco_mu_4mom, 32000, 0);
-    myTree->Branch("Reco_mu_L1_4mom", "TClonesArray", &Reco_mu_L1_4mom, 32000, 0);
+    bookClonesArray(myTree, "Reco_mu_4mom", Reco_mu_4mom);
+    bookClonesArray(myTree, "Reco_mu_L1_4mom", Reco_mu_L1_4mom);
   }
   if (std::strcmp("vector", _mom4format.c_str()) == 0) {
     myTree->Branch("Reco_mu_4mom_pt", &Reco_mu_4mom_pt, 32000, 0);
@@ -1708,7 +1721,7 @@ void HiOniaAnalyzer::InitTree() {
     myTree->Branch("Reco_trk_InLooseAcc", Reco_trk_InLooseAcc, "Reco_trk_InLooseAcc[Reco_trk_size]/O");
     myTree->Branch("Reco_trk_InTightAcc", Reco_trk_InTightAcc, "Reco_trk_InTightAcc[Reco_trk_size]/O");
     if (std::strcmp("array", _mom4format.c_str()) == 0) {
-      myTree->Branch("Reco_trk_4mom", "TClonesArray", &Reco_trk_4mom, 32000, 0);
+      bookClonesArray(myTree, "Reco_trk_4mom", Reco_trk_4mom);
     }
     if (std::strcmp("vector", _mom4format.c_str()) == 0) {
       myTree->Branch("Reco_trk_4mom_pt", &Reco_trk_4mom_pt, 32000, 0);
@@ -1743,7 +1756,7 @@ genOnly2:
       myTree->Branch("Gen_QQ_size", &Gen_QQ_size, "Gen_QQ_size/S");
       //myTree->Branch("Gen_QQ_type",      Gen_QQ_type,    "Gen_QQ_type[Gen_QQ_size]/S");
       if (std::strcmp("array", _mom4format.c_str()) == 0) {
-	      myTree->Branch("Gen_QQ_4mom", "TClonesArray", &Gen_QQ_4mom, 32000, 0);
+	      bookClonesArray(myTree, "Gen_QQ_4mom", Gen_QQ_4mom);
       }
       if (std::strcmp("vector", _mom4format.c_str()) == 0) {
 	      myTree->Branch("Gen_QQ_4mom_pt", &Gen_QQ_4mom_pt, 32000, 0);
@@ -1765,9 +1778,9 @@ genOnly2:
         myTree->Branch("Gen_QQ_Bc_idx", Gen_QQ_Bc_idx, "Gen_QQ_Bc_idx[Gen_QQ_size]/S");
         myTree->Branch("Gen_Bc_size", &Gen_Bc_size, "Gen_Bc_size/S");
         if (std::strcmp("array", _mom4format.c_str()) == 0) {
-          myTree->Branch("Gen_Bc_4mom", "TClonesArray", &Gen_Bc_4mom, 32000, 0);
-          myTree->Branch("Gen_Bc_nuW_4mom", "TClonesArray", &Gen_Bc_nuW_4mom, 32000, 0);
-          myTree->Branch("Gen_3mu_4mom", "TClonesArray", &Gen_3mu_4mom, 32000, 0);
+          bookClonesArray(myTree, "Gen_Bc_4mom", Gen_Bc_4mom);
+          bookClonesArray(myTree, "Gen_Bc_nuW_4mom", Gen_Bc_nuW_4mom);
+          bookClonesArray(myTree, "Gen_3mu_4mom", Gen_3mu_4mom);
         }
         if (std::strcmp("vector", _mom4format.c_str()) == 0) {
           myTree->Branch("Gen_Bc_4mom_pt", &Gen_Bc_4mom_pt, 32000, 0);
@@ -1799,7 +1812,7 @@ genOnly2:
     //myTree->Branch("Gen_mu_type",   Gen_mu_type,   "Gen_mu_type[Gen_mu_size]/S");
     myTree->Branch("Gen_mu_charge", Gen_mu_charge, "Gen_mu_charge[Gen_mu_size]/S");
     if (std::strcmp("array", _mom4format.c_str()) == 0) {
-      myTree->Branch("Gen_mu_4mom", "TClonesArray", &Gen_mu_4mom, 32000, 0);
+      bookClonesArray(myTree, "Gen_mu_4mom", Gen_mu_4mom);
     }
     if (std::strcmp("vector", _mom4format.c_str()) == 0) {
       myTree->Branch("Gen_mu_4mom_pt", &Gen_mu_4mom_pt, 32000, 0);
